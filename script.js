@@ -10,8 +10,21 @@ function populateVoices() {
   voices = this.getVoices();
   voicesDropdown.innerHTML = voices
     .filter(voice => voice.lang.includes('en'))
-    .map(voice => `<option value="${voice.name}">${voice.name} (${voice.lang})</option>`)
+    .map(voice => {
+      const femaleIndicator = voice.name.toLowerCase().includes('female') ? ' 👩' : '';
+      return `<option value="${voice.name}">${voice.name} (${voice.lang})${femaleIndicator}</option>`;
+    })
     .join('');
+  
+  // Set a female voice as default if available
+  const femaleVoice = voices.find(voice => 
+    voice.lang.includes('en') && 
+    voice.name.toLowerCase().includes('female')
+  );
+  if (femaleVoice) {
+    voicesDropdown.value = femaleVoice.name;
+    msg.voice = femaleVoice;
+  }
 }
 
 function setVoice() {
